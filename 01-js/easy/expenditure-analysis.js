@@ -28,8 +28,7 @@ function calculateTotalSpentByCategory(transactions) {
       })
     }
   }
-
-
+  
   return result;
 }
 

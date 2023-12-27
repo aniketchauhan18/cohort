@@ -5,7 +5,21 @@
 */
 
 function isPalindrome(str) {
-  return true;
+  let str1 = str.trim().toLowerCase();
+  let strArr = str.split('');
+  let str2Arr = [];
+  // console.log(strArr);
+  for (let i = strArr.length-1; i >= 0; i--) {
+    str2Arr.push(strArr[i]);
+  }
+  const str2 = str2Arr.join('');
+  if (str1 === str2) {
+    // console.log('true')
+    return true;
+  } else {
+    // console.log('false');
+    return false;
+  }
 }
 
 module.exports = isPalindrome;
