@@ -43,6 +43,83 @@
   const bodyParser = require('body-parser');
   
   const app = express();
+
+  function findIndex(arr, todoId) {
+    for (let i = 0; i<arr.length; i++){
+      if (arr[i] === todoId){
+        return i;
+      }
+      return -1;
+    }
+  }
+
+  app.get("/todos", function(req, res){
+    fs.readFile("todo.json", function(err, data){
+      if (err) throw err;
+      res.json(JSON.parse(data)); // convert json to javascript object
+    });
+  });
+
+
+  app.get('/todos/:id', function(req, res){
+    const todoId = parseInt(req.params.id);
+    fs.readFile("todo.json", function(err, data){
+      if (err) throw err;
+      const todos = JSON.parse(data);
+      const todoIndex = findIndex(todos, todoId);
+      if (todoIndex === -1) {
+        res.sendStatus(404).json({
+          msg: "wrong todoId"
+        })
+      }
+      return todos[todoIndex]
+    })
+  })
+
+  app.post("/todos", function(req, res) {
+    const newTodo = {
+      id: Math.floor(Math.random() * 100000) + 1,
+      title: req.body.title,
+      description: req.body.description
+    }
+    fs.readFile("todos.json", function(err, data) {
+      if (err) throw err
+      const todos = JSON.parse(data);
+      todos.push(newTodo);
+      fs.writeFile("todo.json", function(err){
+        if(err) throw err;
+        res.status(201).json(JSON.stringify(todos));
+      })
+    })
+  })
+
+
+  app.put("todos/:id", function(req, res) {
+    fs.readFile("todos.json", (err, data) => {
+      const todos = JSON.parse(data);
+      const todoId = req.params.id;
+      const todoIndex = findIndex(todos, todoId);
+      if (todoIndex === -1) {
+        res.sendStatus(404).json({
+          msg: "Not found"
+        })
+      } else {
+        const updatedTodo = {
+          id: todos[todoIndex].id,
+          title: req.body.title,
+          description: req.body.description
+        }
+        todos[todoIndex] = updatedTodo
+        fs.writeFile("todo.json", (err) => {
+          if (err) throw err;
+          res.status(200).json(JSON.stringify(updatedTodo))
+        })
+      }
+    })
+  })
+
+
+  app.listen(3000, console.log("server is listening on port 3000"));
   
   app.use(bodyParser.json());
   

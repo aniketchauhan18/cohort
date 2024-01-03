@@ -17,8 +17,42 @@
 */
 
 class Calculator {
-  constructor(result) {
-    
+  constructor() {
+    this.result = 0;
+  }
+
+  // method for adding a number
+  add(num) {
+    this.result += num;
+  }
+
+  subtract(num){
+    this.result -= num;
+  }
+
+  multiply(num){
+    this.result *= num;
+  }
+
+  divide(num){
+    if (num != 0){
+      this.result /= num;
+    } else {
+      console.log("Cannot divide by zero");
+    }
+  }
+
+  clear(){
+    this.result = 0;
+  }
+
+  getResult() {
+    return this.result;
+  }
+
+  calculate(expression) {
+    this.clear();
+    expression = expression.replace('/\s/g', '');
   }
 }
 
